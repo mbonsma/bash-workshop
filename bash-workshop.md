@@ -35,7 +35,7 @@ After this workshop, you will have learned:
 - how to work with files from the command line using commands like `cat`, `cp`,
 `mv`, `mkdir`, and `rm`
 - handy commands for working with files like `wc`, `head`, `tail`, `history`,
-`sort`, and `uniq`
+`sort`, `uniq`, and the wildcard character `*`
 - using "pipes" to combine commands and `>` to redirect output
 - where to get more information and help
 - time permitting: `cut`
@@ -178,6 +178,10 @@ ls -F -a /
 ls -Fa /
 ```
 
+The flag `-a` stands for "all": `ls` shows all files and directories, even
+hidden ones. The hidden directory `..` is shorthand for the parent directory,
+and the hidden directory `.` is shorthand for the current directory.
+
 `ls` has many options - we've just seen two. To get more information about a
 command, you can use the option `--help`, which will print out the manual page
 for the command.
@@ -295,11 +299,167 @@ command, filename, or directory name. If there's only one possibility, it will
 auto-complete; if there are more than one, hitting `Tab` a second time will show
 all the possibilities.
 
-```{Bash}
+```{Bash}   
 cd Des # and hit "Tab"
 ```
+
+**Handy tip: up-arrow**
+
+Hitting the `up` arrow key will fill in the most recent command you've run.
+Hitting `Enter` will run it again. Hitting `up` more than once will cycle back
+in time through all the previous commands you've run.
 
 ## Working with files
 
 We've seen how to navigate our computer using commands, and now it's time to
 actually make some changes.
+
+Let's work on the Desktop so that we're all in the same place.
+Header One
+```{Bash}
+cd ~/Desktop
+ls
+```
+
+The command `mkdir` *makes a directory* in the current working directory. We'll
+make a directory called 'thesis'.
+
+```{Bash}
+mkdir thesis
+ls
+```
+
+You could also create a directory using whatever file navigator you're used to,
+and it would turn out exactly the same.
+
+Now let's go into the thesis directory and create a file.
+
+```{Bash}
+cd thesis
+touch intro.txt
+```
+
+The command `touch` will either update the timestamp of a file that exists, or
+create a new file if the filename you give as an argument doesn't exist yet.
+
+The file `intro.txt` is blank, which we know because we just made it and haven't
+done anything to it. In general, how can you tell if a file is empty? There are
+many ways, and we'll see more that could be applied to this question as we go.
+
+```{Bash}
+ls -lh intro.txt
+```
+
+The flag `-l` stands for *long*, and it causes `ls` to display more information
+about a file: the permissions, user information, size, and time information. The
+flag `-h` stands for *human-readable*: it converts the file size from just bytes
+to human-readable sizes like KB or MB. Using `ls -lh` tells us that the file
+`intro.txt` has size 0.
+
+Another way to see if a file is empty is to check directly what's inside it. The
+command `cat` (*concatenate*) will print the contents of a file to the screen.
+
+```{Bash}
+cat intro.txt
+```
+
+There's no output because the file is empty.
+
+You can copy a file using the command `cp`. The first argument to `cp` is the
+filename you want to copy, and the second argument is the name of the destination
+file.
+
+```{Bash}
+cp intro.txt intro_v1.txt
+ls
+```
+
+The command `mv` *moves* a file to a new location or filename. Since renaming is
+fundamentally the same thing as moving, you can use *mv* to rename files.
+
+```{Bash}
+mv intro_v1.txt intro_backup.txt
+ls
+```
+
+With `mv` and `cp`, you can specify different paths for the filenames. In this
+example, supplying a destination directory but not a filename will tell `mv` to
+re-use the same filename.
+
+```{Bash}
+mv intro_backup.txt ../
+ls ../
+```
+
+> **Challenge**
+>
+> Suppose that you created a plain-text file in your current directory to
+> contain a list of the statistical tests you will need to do to analyze your
+> data, and named it: `statstics.txt`
+> After creating and saving this file you realize you misspelled the filename!
+> You want to correct the mistake, which of the following commands could you use
+> to do so?
+>
+> 1. `cp statstics.txt statistics.txt`
+> 2. `mv statstics.txt statistics.txt`
+> 3. `mv statstics.txt .``
+> 4. `cp statstics.txt .`
+
+The command `rm` will *remove* the file whose name you supply as the argument.
+Be careful: this is not reversible! The file will be deleted forever, bypassing
+the recycling bin. If you do want a bit more warning, however, you can use the
+flag `-i`, which will ask for confirmation before removing the file.
+
+```{Bash}
+touch test.txt
+rm test.txt
+
+touch test.txt
+rm -i test.txt
+```
+
+### Beyond moving things around
+
+We've seen how to create, delete, move, copy, and rename files and directories.
+Now we'll learn some commands for working with and analyzing the contents of
+files.
+
+First, a handy command that shows you the most recent commands you've run in
+reverse chronological order:
+
+```{Bash}
+history
+```
+
+Using `history` is a great way to very easily reproduce a task - if you've been
+trying different things and you find the one that works, you can find it back
+again using history. Better yet, you can *redirect* the output of a command from
+the screen to a file:
+
+```{Bash}
+history > history.txt
+ls
+```
+
+Now we have a file called 'history.txt' that contains the output of the `history`
+command. Let's have a look inside.
+
+```{Bash}
+cat history.txt
+```
+
+`cat` is great for seeing what's in a file, but if the file is very big, `cat`
+will still try to print the entire thing. Two commands that are very helpful for
+getting a taste of a file without a huge amount of output are `head` and `tail`.
+
+```{Bash}
+head history.txt
+tail history.txt
+```
+
+Both of these commands have an option `-n` that specifies the number of lines to
+return:
+
+```{Bash}
+tail -n 20 history.txt
+```
