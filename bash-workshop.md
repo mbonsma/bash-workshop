@@ -138,3 +138,168 @@ If you type a command that Bash doesn't recognize, you'll get an error message:
 ```{Bash}
 ks
 ```
+
+## Navigating files and directories
+
+Stuff on your computer is organized into files and folders (also called
+directories). You might be used to navigating through your filesystem using a
+navigator application and clicking on directory icons, and we can do the same
+thing from the command line.
+
+First, the command `pwd` (*print working directory*) tells us where we are in
+the filesystem.
+
+```{Bash}
+pwd
+```
+
+The output you see will likely be different depending on your operating system.
+We're all likely in our *home* directory, where terminal or Git Bash opens by
+default.
+
+`ls` lists the files and directories inside the current directory. We can add
+*flags* or *options* to commands to modify their behaviour: try adding `-F` and
+see if you notice what changes about the output.
+
+```{Bash}
+ls -F
+```
+
+In general, a Bash command begins with the command name (`ls`), is followed by a
+list of options that begin with `-` or `--` (`-F`), and ends with arguments. We
+can add an argument to `ls` that specifies which directory we want `ls` to look
+in. Try the following commands and see what they do.
+
+```{Bash}
+ls -a
+ls Downloads
+ls -F Downloads
+ls -F -a /
+ls -Fa /
+```
+
+`ls` has many options - we've just seen two. To get more information about a
+command, you can use the option `--help`, which will print out the manual page
+for the command.
+
+```{Bash}
+ls --help
+```
+
+Another way to access the manual page is with `man`, which stands for *manual*:
+
+```{Bash}
+man ls
+```
+
+It's possible that only one of these two will work depending on your environment.
+
+> **Challenge**
+>
+> What does `ls` do when used with
+> the `-l` option? What about if you use both the `-l` and the `-h` option?
+
+`pwd` and `ls` tell us about where we are and what's there, but we can also
+move around through our filesystem. The command `cd` (*change directory*) is
+how to do this.
+
+```{Bash}
+cd Downloads
+pwd
+ls
+```
+
+What if we want to go back up one level? We might try using the name of the
+higher directory:
+
+```{Bash}
+cd madeleine # or whatever your home directory is called
+```
+
+But this gives an error: `bash: cd: madeleine: No such file or directory`.
+
+*Path names* are relative: commands like `cd` and `ls` try to relate file and
+directory names to ones that can be seen from the current location. We have a
+few options to go up one level:
+
+1. Specify the full path
+
+```{Bash}
+cd /home/madeleine
+pwd
+```
+
+2. Use the shortcut `..` to go up one level
+
+`..` is shorthand notation for "the directory that contains the current
+directory."
+
+```{Bash}
+cd Downloads
+cd ..
+pwd
+```
+
+3. Use the shortcut `-` to go back to the previous directory
+
+`-` is shorthand for "the directory we were in last," which in this case also
+happens to be the directory above us.
+
+```{Bash}
+cd Downloads
+cd -
+pwd
+```
+4. Use the shortcut `~` to go to the home directory
+
+'~' is shorthand for the *home directory*, which in this case is where we want
+to go.
+
+```{Bash}
+cd Downloads
+cd ~
+pwd
+```
+
+All of these options have the same result in our case where we want to go from
+a directory below the home directory back to home. But if we were somewhere else,
+they wouldn't necessarily be equivalent.
+
+> **Challenge**
+>
+> Starting from `/Users/amanda/Desktop/data`, which of the following commands could
+> Amanda use to navigate to her home directory, which is `/Users/amanda`?
+> Hint: play around with these choices on your own computer by creating and
+> navigating to a folder called `data` on your desktop using the following commands:
+> `cd Desktop`
+> `mkdir data`
+> `cd data`
+> Remember that `cd -` will take you back to the previous directory after each
+> trial solution you use, and that `pwd` will show you where you are to check if
+> it worked.
+>
+> 1. cd .
+> 2. cd /
+> 3. cd /home/amanda
+> 4. cd ../..
+> 5. cd ~
+> 6. cd home
+> 7. cd ~/Desktop/data/../..
+> 8. cd
+> 9. cd ..
+
+**Handy tip: tab completion**
+
+Whenever you're typing in your terminal, you can hit `Tab` to auto-complete a
+command, filename, or directory name. If there's only one possibility, it will
+auto-complete; if there are more than one, hitting `Tab` a second time will show
+all the possibilities.
+
+```{Bash}
+cd Des # and hit "Tab"
+```
+
+## Working with files
+
+We've seen how to navigate our computer using commands, and now it's time to
+actually make some changes.
