@@ -35,10 +35,10 @@ After this workshop, you will have learned:
 - how to work with files from the command line using commands like `cat`, `cp`,
 `mv`, `mkdir`, and `rm`
 - handy commands for working with files like `wc`, `head`, `tail`, `history`,
-`sort`, `uniq`, and the wildcard character `*`
+ and the wildcard character `*`
 - using "pipes" to combine commands and `>` to redirect output
 - where to get more information and help
-- time permitting: `cut`
+- time permitting: `cut`, `sort`, and `uniq`
 
 ## Why use the command line?
 
@@ -176,11 +176,17 @@ ls Downloads
 ls -F Downloads
 ls -F -a /
 ls -Fa /
+ls *.txt
 ```
 
 The flag `-a` stands for "all": `ls` shows all files and directories, even
 hidden ones. The hidden directory `..` is shorthand for the parent directory,
 and the hidden directory `.` is shorthand for the current directory.
+
+The character `*` is a *wildcard* - it matches any character. The command
+`ls *.txt` will list any file that ends in `.txt`, since `*` matches anything
+that comes before. This is handy if you're looking for something and you know
+a bit about it, like that it ends in `.jpg` or starts with `a`, for example.
 
 `ls` has many options - we've just seen two. To get more information about a
 command, you can use the option `--help`, which will print out the manual page
@@ -418,7 +424,7 @@ touch test.txt
 rm -i test.txt
 ```
 
-### Beyond moving things around
+### Working with the contents of a file
 
 We've seen how to create, delete, move, copy, and rename files and directories.
 Now we'll learn some commands for working with and analyzing the contents of
@@ -431,10 +437,11 @@ reverse chronological order:
 history
 ```
 
-Using `history` is a great way to very easily reproduce a task - if you've been
+Using `history` is a great way to quickly make a task reproducible - if you've been
 trying different things and you find the one that works, you can find it back
 again using history. Better yet, you can *redirect* the output of a command from
-the screen to a file:
+the screen to a file, and doing this with `history` saves the command history to
+a file.
 
 ```{Bash}
 history > history.txt
@@ -442,7 +449,7 @@ ls
 ```
 
 Now we have a file called 'history.txt' that contains the output of the `history`
-command. Let's have a look inside.
+command. Let's have a look at the contents of this file.
 
 ```{Bash}
 cat history.txt
@@ -463,3 +470,142 @@ return:
 ```{Bash}
 tail -n 20 history.txt
 ```
+
+A command I love and use a lot is `wc`, *word count*, which returns the number
+of lines, words, and characters in a file.
+
+```{Bash}
+wc history.txt
+```
+
+`wc` has options to turn off and on each of its outputs: `wc -l` just returns
+the number of lines in the file.
+
+```{Bash}
+wc -l history.txt
+```
+
+## Combining commands using pipes
+
+Much of the power of Bash comes from combining a few commands to make powerful
+pipelines. To do this, there's one more operation to learn: the *pipe*.
+
+```{Bash}
+cat history.txt | tail
+```
+
+The vertical bar `|` is a *pipe*: it tells Bash to take the output of the first
+command and use it as the input to the next command. Remember that `tail` takes
+a file as its argument; now it's taking the output of `cat history.txt` in place
+of a filename. The result here is the same as `tail history.txt`, which means
+we probably don't need to use a pipe in this example. But it can be very useful
+to skip intermediate steps sometimes: for example, instead of saving `history.txt`,
+we could have directly piped `history` into the command `tail` to see the most
+recent commands we've run.
+
+```{Bash}
+history | head
+```
+
+You can combine multiple pipes in a chain as long as you want.
+
+```{Bash}
+history | head | wc -l
+```
+
+> **Challenge**
+>
+> Which line of `history.txt` will be returned by the following command?
+>
+> `cat history.txt | head -n 5 | tail -n 1`
+
+### A practical example: counting your most frequent Bash commands
+
+Let's combine what we've learned so far with a few new commands to do something
+useful: figure out which Bash commands we used most often. We already have a
+file `history.txt` which has the ~2000 most recent Bash commands in it, so we'll
+use this file to do our analysis.
+
+```{Bash}
+head history.txt
+```
+
+`history.txt` has several columns: the first column is a number that gives the
+order in which each command was run, and the second column is the command itself.
+But we don't want to know all the sub-specifics of each time we ran `ls`, we want
+to count just `ls` by itself. We can think of there being at least
+three columns: the first with the number, the second with the command, and the
+third with options and arguments.
+
+My second all-time favourite Bash command is `cut`: `cut` *cuts* columns in a file
+by a delimiter that you specify, and you can return one or more of the resulting
+columns by itself.
+
+```{Bash}
+cat history.txt | cut -d' ' -f4
+```
+
+`-d` specifies which character delimits the columns; here it's a *space*
+character. `-f4` tells cut to return the 4th column. It's the 4th column and not
+the 2nd because it looks like there's a few extra whitespace characters that `cut`
+is counting as their own columns. You might need to change the number by trial
+and error until you get a list of just commands, the output we want.
+
+Next, we want a list of all the unique commands and how many times they appear.
+There's a command `uniq` that can do just that!
+
+```{Bash}
+cat history.txt | cut -d' ' -f4 | uniq
+```
+
+But wait: some commands are still showing up multiple times. It turns out that
+`uniq` only collapses repeated lines if they are *adjacent*: if you have the
+sequence `ls, cd, ls`, `uniq` will still return all three. We need an intermediate
+step where we sort all the commands using the command `sort`.
+
+```{Bash}
+cat history.txt | cut -d' ' -f4 | sort | uniq
+```
+
+That's more like it! To count how many times each command turns up, we can add
+the flag `-c` to `uniq`:
+
+```{Bash}
+cat history.txt | cut -d' ' -f4 | sort | uniq -c
+```
+
+A final pipe to `sort` will arrange these in order:
+
+```{Bash}
+cat history.txt | cut -d' ' -f4 | sort | uniq -c | sort
+```
+
+`sort` by itself sorts based on the first character; we can add the `-n` flag
+to sort by the numeric value of each line.
+
+```{Bash}
+cat history.txt | cut -d' ' -f4 | sort | uniq -c | sort -n
+```
+
+If you wanted, you could save this output to a file as a record of your command
+use:
+
+```{Bash}
+cat history.txt | cut -d' ' -f4 | sort | uniq -c | sort -n > common_commands.txt
+```
+
+## Where to get help
+
+When you're getting familiar with the command line, it can be hard to know what's
+possible and where to get help. It's not that easy to make an irreversible error,
+so a good way to learn is to try things. If you're wondering how to do something
+in particular, a Google search for your question, like
+"Bash how to get the second column of a text file",
+will usually return a StackOverflow page with the same or similar question.
+There's usually more than one way to do something, and it's up to you which
+methods you end up being comfortable with.
+
+If you'd like a more in-depth tutorial, I recommend [Software Carpentry's Bash
+lesson](https://swcarpentry.github.io/shell-novice/). This workshop is based on
+the Software Carpentry material, but there's much more in the online notes than
+we had time to cover today.
