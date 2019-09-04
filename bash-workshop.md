@@ -609,3 +609,15 @@ If you'd like a more in-depth tutorial, I recommend [Software Carpentry's Bash
 lesson](https://swcarpentry.github.io/shell-novice/). This workshop is based on
 the Software Carpentry material, but there's much more in the online notes than
 we had time to cover today.
+
+## A few useful things we didn't cover
+
+* [searching](http://swcarpentry.github.io/shell-novice/07-find/index.html): through history, files, file contents, etc.
+* [loops](http://swcarpentry.github.io/shell-novice/05-loop/index.html): repeating the same action on many different cases
+* [writing Bash scripts](http://swcarpentry.github.io/shell-novice/06-script/index.html): saving your commands in a file to be re-used
+
+## Resources
+
+* [In-depth list of commands and tutorials by topic](https://dev.to/awwsmm/101-bash-commands-and-tips-for-beginners-to-experts-30je)
+* [Glossary of basic commands](https://programminghistorian.org/en/lessons/intro-to-bash#reference-guide)
+* [Guide for writing Bash scripts](http://tldp.org/HOWTO/Bash-Prog-Intro-HOWTO.html)
