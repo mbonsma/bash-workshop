@@ -74,11 +74,11 @@ do this.
 
 ### Advantages of text-based communication with your computer
 
-- **Repetitive tasks can be automated**
+- **Repetitive tasks can be automated.**
 Like in the example above, text-based commands will make it easy for us to
 repeat the same process many times.
 
-- **Familiar tasks can be done very quickly**
+- **Familiar tasks can be done very quickly.**
 Think about learning a language: in the beginning it's nice to look things up
 in a dictionary (or a menu in a graphical program), and slowly string together
 sentences one word at a time. But once we become more proficient in the language
@@ -86,7 +86,7 @@ and know what we want to say, it is easier to say or type it directly, instead
 of having to look up every word in the dictionary first.
 
 - **Text-based interfaces are less resource-intensive and faster to develop than
-GUIs, which means some programs you might want to use don't have a GUI at all**
+GUIs, which means some programs you might want to use don't have a GUI at all.**
 Graphical components of programs require more resources from your computer to
 be run, and they also take more work to create in the first place. Many powerful
 programs are written without a graphical user interface (which makes it faster
@@ -99,7 +99,7 @@ programming language (like Bash) can be transferred to others. In addition, most
 powerful computers that you can log into remotely might only give you a text
 interface to navigate the computer with.
 
-- **A record of text commands facilitates reproducibility**
+- **A record of text commands facilitates reproducibility.**
 It is much easier to automate and reproduce / repeat any task once you have all
 the instructions written down. Compare being shown how to perform a certain
 analysis in spreadsheet software, where the instructions will be "first you
@@ -112,15 +112,17 @@ your own pace.
 The Shell is a program which runs other programs rather than doing calculations
 itself. Those programs can be as complicated as climate modeling software and
 as simple as a program that creates a new directory. The simple programs which
-are used to perform stand alone tasks are usually refered to as *commands*. The
+are used to perform stand-alone tasks are usually refered to as *commands*. The
 most popular Unix shell is Bash, (the Bourne Again SHell — so-called because
 it’s derived from a shell written by Stephen Bourne).
 
-When the shell is first opened, you are presented with a prompt, indicating that
+When the shell is first opened, you are presented with a *prompt*, indicating that
 the shell is waiting for input. It might have some text about your computer and
 your user identity, and it probably ends with a `$` symbol. Sometimes bash
 commands are written down as `$ ls` (for example): you don't have to type the
 `$`, only the command itself (`ls`).
+
+The prompt:
 
 ```{Bash}
 $
@@ -143,7 +145,7 @@ ks
 
 Stuff on your computer is organized into files and folders (also called
 directories). You might be used to navigating through your filesystem using a
-navigator application and clicking on directory icons, and we can do the same
+navigator application and clicking on directory icons; we can do an equivalent
 thing from the command line.
 
 First, the command `pwd` (*print working directory*) tells us where we are in
@@ -166,9 +168,10 @@ ls -F
 ```
 
 In general, a Bash command begins with the command name (`ls`), is followed by a
-list of options that begin with `-` or `--` (`-F`), and ends with arguments. We
-can add an argument to `ls` that specifies which directory we want `ls` to look
-in. Try the following commands and see what they do.
+list of options that begin with `-` or `--` (`-F`), and ends with arguments.
+
+We can add an argument to `ls` that specifies which directory we want `ls` to
+look in. Try the following commands and see what they do.
 
 ```{Bash}
 ls -a
@@ -179,7 +182,7 @@ ls -Fa /
 ls *.txt
 ```
 
-The flag `-a` stands for "all": `ls` shows all files and directories, even
+The flag `-a` stands for "all": `ls -a` shows all files and directories, even
 hidden ones. The hidden directory `..` is shorthand for the parent directory,
 and the hidden directory `.` is shorthand for the current directory.
 
@@ -241,8 +244,8 @@ pwd
 
 2. Use the shortcut `..` to go up one level
 
-`..` is shorthand notation for "the directory that contains the current
-directory."
+`..` is shorthand notation for the *parent directory*,
+the directory that contains the current directory.
 
 ```{Bash}
 cd Downloads
@@ -279,11 +282,16 @@ they wouldn't necessarily be equivalent.
 >
 > Starting from `/Users/amanda/Desktop/data`, which of the following commands could
 > Amanda use to navigate to her home directory, which is `/Users/amanda`?
+>
 > Hint: play around with these choices on your own computer by creating and
 > navigating to a folder called `data` on your desktop using the following commands:
+>
 > `cd Desktop`
+>
 > `mkdir data`
+>
 > `cd data`
+>
 > Remember that `cd -` will take you back to the previous directory after each
 > trial solution you use, and that `pwd` will show you where you are to check if
 > it worked.
@@ -321,9 +329,10 @@ We've seen how to navigate our computer using commands, and now it's time to
 actually make some changes.
 
 Let's work on the Desktop so that we're all in the same place.
-Header One
+
 ```{Bash}
 cd ~/Desktop
+pwd
 ls
 ```
 
@@ -343,6 +352,7 @@ Now let's go into the thesis directory and create a file.
 ```{Bash}
 cd thesis
 touch intro.txt
+ls
 ```
 
 The command `touch` will either update the timestamp of a file that exists, or
@@ -394,6 +404,7 @@ re-use the same filename.
 
 ```{Bash}
 mv intro_backup.txt ../
+ls
 ls ../
 ```
 
@@ -403,12 +414,12 @@ ls ../
 > contain a list of the statistical tests you will need to do to analyze your
 > data, and named it: `statstics.txt`
 > After creating and saving this file you realize you misspelled the filename!
-> You want to correct the mistake, which of the following commands could you use
+> You want to correct the mistake; which of the following commands could you use
 > to do so?
 >
 > 1. `cp statstics.txt statistics.txt`
 > 2. `mv statstics.txt statistics.txt`
-> 3. `mv statstics.txt .``
+> 3. `mv statstics.txt .`
 > 4. `cp statstics.txt .`
 
 The command `rm` will *remove* the file whose name you supply as the argument.
@@ -423,6 +434,21 @@ rm test.txt
 touch test.txt
 rm -i test.txt
 ```
+
+**Handy tip: setting an alias**
+
+You can define an [*alias*](http://tldp.org/LDP/abs/html/aliases.html)
+for any command that redefines
+what happens when you type something. If you want the command `rm` to *always*
+ask for confirmation, for example, you can set an alias that runs `rm -i` every
+time you type `rm` by running the command `alias rm="rm -i"`. Running the
+command `alias` is not permanent: this alias will last only as long as your
+current terminal window is open. If you want to set an alias permanently, you
+can do this by editing your bash configuration file, which is beyond the scope
+of today's material. [This blog post](https://blog.dghubble.io/post/.bashprofile-.profile-and-.bashrc-conventions/)
+has more information about modifying your bash configuration, and
+[this one](http://www.peachpit.com/articles/article.aspx?p=31442&seqNum=5) has
+step-by-step instructions.
 
 ### Working with the contents of a file
 
@@ -439,7 +465,7 @@ history
 
 Using `history` is a great way to quickly make a task reproducible - if you've been
 trying different things and you find the one that works, you can find it back
-again using history. Better yet, you can *redirect* the output of a command from
+again using `history`. Better yet, you can *redirect* the output of a command from
 the screen to a file, and doing this with `history` saves the command history to
 a file.
 
@@ -447,6 +473,9 @@ a file.
 history > history.txt
 ls
 ```
+
+The symbol `>` tells Bash to take the output of the first command and send it
+to a file.
 
 Now we have a file called 'history.txt' that contains the output of the `history`
 command. Let's have a look at the contents of this file.
@@ -471,7 +500,7 @@ return:
 tail -n 20 history.txt
 ```
 
-A command I love and use a lot is `wc`, *word count*, which returns the number
+A command I use a lot is `wc`, *word count*, which returns the number
 of lines, words, and characters in a file.
 
 ```{Bash}
@@ -504,7 +533,7 @@ we could have directly piped `history` into the command `tail` to see the most
 recent commands we've run.
 
 ```{Bash}
-history | head
+history | tail
 ```
 
 You can combine multiple pipes in a chain as long as you want.
@@ -532,9 +561,9 @@ head history.txt
 
 `history.txt` has several columns: the first column is a number that gives the
 order in which each command was run, and the second column is the command itself.
-But we don't want to know all the sub-specifics of each time we ran `ls`, we want
+But we don't want to know all the specific options and arguments of each time we ran `ls`, we want
 to count just `ls` by itself. We can think of there being at least
-three columns: the first with the number, the second with the command, and the
+three columns: the first with the command number, the second with the command, and the
 third with options and arguments.
 
 My second all-time favourite Bash command is `cut`: `cut` *cuts* columns in a file
@@ -615,6 +644,7 @@ we had time to cover today.
 * [searching](http://swcarpentry.github.io/shell-novice/07-find/index.html): through history, files, file contents, etc.
 * [loops](http://swcarpentry.github.io/shell-novice/05-loop/index.html): repeating the same action on many different cases
 * [writing Bash scripts](http://swcarpentry.github.io/shell-novice/06-script/index.html): saving your commands in a file to be re-used
+* [setting *aliases* to modify commands and save time typing](http://tldp.org/LDP/abs/html/aliases.html)
 
 ## Resources
 
